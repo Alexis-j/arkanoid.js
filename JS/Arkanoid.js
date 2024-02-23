@@ -1,72 +1,64 @@
+import  { drawBall } from './funciones/DrawBall.js';
+import { ballMovement } from './funciones/BallMovement.js';
+import { drawPaddle } from "./funciones/DrawPaddle.js";
+// import { initEvents } from './funciones/initEvent.js';
+
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d'); // 2D rendering context
 
 canvas.width = 448;
-canvas.height = 800;
+canvas.height = 600;
 
-// Variables de nuestro juego
+// Variables de la PELOTA
 let counter = 0;
 //variables de la pelota
-const ballRadius = 2;
+const ballRadius = 3;
 
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 // velocidad de la pelota
-let dx = -2;
-let dy = -2;
+let dx = -1;
+let dy = -1;
 
 
-function drawBall() {
-  ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#fff';
-  ctx.fill();
-  ctx.closePath();
-}
+// Variables del PADDLE
+const paddleHeight = 10;
+const paddleWidth = 50;
+
+let paddleX = (canvas.width - paddleWidth) / 2;
+let paddleY = canvas.height - paddleHeight - 10;
 
 
-function drawPaddle() {}
+let rightPressed = false;
+let leftPressed = false;
+
 function drawBricks() {}
-
 function collicionBall() {}
-function ballMovement() {
-  // rebotar en las paredes
-
-  if (
-    x + dx > canvas.width - ballRadius || // colision con la derecha
-    x + dx < ballRadius // colision con la izquierda
-  )
-  {
-    dx = -dx;
+function paddleMovement() {
+  if (rightPressed) {
+    paddleX += 7;
+  } else if (leftPressed) {
+    paddleX -= 7;
   }
-
-  // colision con el techo
-  if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
-    dy = -dy;
-  }
-
-
-  x += dx;
-  y += dy;
 }
-function paddleMovement() {}
+
 function cleanCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 
-function draw() {
-  // cleanCanvas();
+const draw = () => {
+  cleanCanvas();
 
   // hay que dibujar la pelota
-  drawBall();
-  drawPaddle();
+  drawBall(ctx, x, y, ballRadius);
+  drawPaddle(ctx, paddleX, paddleY, paddleHeight, paddleWidth);
   drawBricks();
   // drawScore();
 
   //colisiones y movimientos
   collicionBall();
-  ballMovement();
+  ({ x, y, dx, dy } = ballMovement(canvas, ctx, x, y, ballRadius, dx, dy));
   paddleMovement();
 
 
@@ -74,3 +66,4 @@ function draw() {
 }
 
 draw();
+// initEvents();
