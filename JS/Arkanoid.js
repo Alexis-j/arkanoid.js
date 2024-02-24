@@ -1,7 +1,6 @@
-import  { drawBall } from './funciones/DrawBall.js';
-import { ballMovement } from './funciones/BallMovement.js';
-import { drawPaddle } from "./funciones/DrawPaddle.js";
-// import { initEvents } from './funciones/initEvent.js';
+import  { drawBall, ballMovement } from './funciones/Ball.js';
+import { drawPaddle, paddleMovement} from "./funciones/Paddle.js";
+import { initEvents, leftPressed, rightPressed } from './funciones/initEvent.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d'); // 2D rendering context
@@ -17,30 +16,20 @@ const ballRadius = 3;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 // velocidad de la pelota
-let dx = -1;
-let dy = -1;
+let dx = -.5;
+let dy = -.5;
 
 
 // Variables del PADDLE
 const paddleHeight = 10;
-const paddleWidth = 50;
+const paddleWidth = 200;
 
 let paddleX = (canvas.width - paddleWidth) / 2;
 let paddleY = canvas.height - paddleHeight - 10;
 
 
-let rightPressed = false;
-let leftPressed = false;
-
 function drawBricks() {}
 function collicionBall() {}
-function paddleMovement() {
-  if (rightPressed) {
-    paddleX += 7;
-  } else if (leftPressed) {
-    paddleX -= 7;
-  }
-}
 
 function cleanCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -48,22 +37,21 @@ function cleanCanvas() {
 
 
 const draw = () => {
+  console.log(rightPressed, leftPressed);
   cleanCanvas();
 
-  // hay que dibujar la pelota
+  // Dibujar la pelota y la paleta
   drawBall(ctx, x, y, ballRadius);
+  paddleX = paddleMovement(rightPressed, leftPressed, paddleX);
   drawPaddle(ctx, paddleX, paddleY, paddleHeight, paddleWidth);
   drawBricks();
-  // drawScore();
 
-  //colisiones y movimientos
+  // Movimiento de la pelota y colisiones
   collicionBall();
   ({ x, y, dx, dy } = ballMovement(canvas, ctx, x, y, ballRadius, dx, dy));
-  paddleMovement();
-
 
   window.requestAnimationFrame(draw);
 }
 
 draw();
-// initEvents();
+initEvents(rightPressed, leftPressed);
