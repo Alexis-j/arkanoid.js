@@ -42,7 +42,7 @@ const draw = () => {
 
   // Dibujar la pelota y la paleta
   drawBall(ctx, x, y, ballRadius);
-  paddleX = paddleMovement(rightPressed, leftPressed, paddleX);
+  paddleX = paddleMovement(rightPressed, leftPressed, paddleX, paddleWidth);
   drawPaddle(ctx, paddleX, paddleY, paddleHeight, paddleWidth);
   drawBricks();
 
